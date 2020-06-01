@@ -52,12 +52,8 @@ if [ $PERCENT_USAGE -ge $THRESHOLD ]; then
 	#Wait/loop until volume get resized in console. 
 	while [[ $(aws ec2 describe-volumes  --filters Name=volume-id,Values=$VOLUME_ID --region $REGION_ID --query Volumes[*].Size --output text) -ne $NEW_REQUIRED_SIZE_IN_GB ]] ; do
 	 sleep 10
-<<<<<<< HEAD
-	 echo "[INFO] - Waiting volume increase in AWS to resize inside server."
-=======
 	 echo "[INFO] - Waiting volume increase in AWS to resize inside server. in AWS it is still showing in the console with:"
 	 aws ec2 describe-volumes  --filters Name=volume-id,Values=$VOLUME_ID --region us-east-1 --query Volumes[*].Size --output text
->>>>>>> 8fc52678c2b616113a577f600db76beb81a4626a
 	done
 	
 	#Increase filesystem size
