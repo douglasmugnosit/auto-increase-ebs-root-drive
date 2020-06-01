@@ -40,19 +40,19 @@ PERCENT_USAGE=$(df -h / | grep -vi "filesystem" | awk '{print $5}' | tr -d "%")
 if [ $PERCENT_USAGE -ge $THRESHOLD ]; then
 	#Try using xvda and sda
 	VOLUME_ID=""
-	echo $VOLUME_ID | grep -qi "vol-" || VOLUME_ID=$(aws ec2 describe-volumes  --filters Name=attachment.device,Values=/dev/xvda Name=attachment.instance-id,Values=$INSTANCE_ID --query 'Volumes[*].{ID:VolumeId}' --region us-east-1 --output text)
-	echo  $VOLUME_ID | grep -qi "vol-"  || VOLUME_ID=$(aws ec2 describe-volumes  --filters Name=attachment.device,Values=/dev/sda Name=attachment.instance-id,Values=$INSTANCE_ID --query 'Volumes[*].{ID:VolumeId}' --region us-east-1 --output text)
+	echo $VOLUME_ID | grep -qi "vol-" || VOLUME_ID=$(aws ec2 describe-volumes  --filters Name=attachment.device,Values=/dev/xvda Name=attachment.instance-id,Values=$INSTANCE_ID --query 'Volumes[*].{ID:VolumeId}' --region $REGION_ID --output text)
+	echo  $VOLUME_ID | grep -qi "vol-"  || VOLUME_ID=$(aws ec2 describe-volumes  --filters Name=attachment.device,Values=/dev/sda Name=attachment.instance-id,Values=$INSTANCE_ID --query 'Volumes[*].{ID:VolumeId}' --region $REGION_ID --output text)
 
 	#increase volume
 	aws ec2 modify-volume \
 		--size $NEW_REQUIRED_SIZE_IN_GB \
 		--volume-id $VOLUME_ID \
-		--region us-east-1
+		--region $REGION_ID
 			
 	#Wait/loop until volume get resized in console. 
-	while [[ $(aws ec2 describe-volumes  --filters Name=volume-id,Values=$VOLUME_ID --region us-east-1 --query Volumes[*].Size --output text) -ne $NEW_REQUIRED_SIZE_IN_GB ]] ; do
+	while [[ $(aws ec2 describe-volumes  --filters Name=volume-id,Values=$VOLUME_ID --region $REGION_ID --query Volumes[*].Size --output text) -ne $NEW_REQUIRED_SIZE_IN_GB ]] ; do
 	 sleep 10
-	 echo "[INFO] - Waiting volume increase in AWS to resize inside server. in AWS it is still :"
+	 echo "[INFO] - Waiting volume increase in AWS to resize inside server."
 	done
 	
 	#Increase filesystem size
