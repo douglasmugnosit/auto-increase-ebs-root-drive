@@ -13,10 +13,12 @@
 #Customizable variables
 #Threshold to increase the volume size
 THRESHOLD="80"
+
 #How much % do you want to increase in case volume arrive in threshold.
 #Ex. if 20%, the volume will increase 20% of the size. if it has 10G, it will
 #become 12G. 
 INCREASE_PERCENTAGE=20
+
 ########################################################################
 
 #GET AWS INSTANCE ID
@@ -42,6 +44,7 @@ if [ $PERCENT_USAGE -ge $THRESHOLD ]; then
 	VOLUME_ID=""
 	echo $VOLUME_ID | grep -qi "vol-" || VOLUME_ID=$(aws ec2 describe-volumes  --filters Name=attachment.device,Values=/dev/xvda Name=attachment.instance-id,Values=$INSTANCE_ID --query 'Volumes[*].{ID:VolumeId}' --region $REGION_ID --output text)
 	echo  $VOLUME_ID | grep -qi "vol-"  || VOLUME_ID=$(aws ec2 describe-volumes  --filters Name=attachment.device,Values=/dev/sda Name=attachment.instance-id,Values=$INSTANCE_ID --query 'Volumes[*].{ID:VolumeId}' --region $REGION_ID --output text)
+	echo  $VOLUME_ID | grep -qi "vol-"  || VOLUME_ID=$(aws ec2 describe-volumes  --filters Name=attachment.device,Values=/dev/sda1 Name=attachment.instance-id,Values=$INSTANCE_ID --query 'Volumes[*].{ID:VolumeId}' --region $REGION_ID --output text)
 
 	#increase volume
 	aws ec2 modify-volume \
