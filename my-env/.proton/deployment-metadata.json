@@ -1,6 +1,6 @@
 {
-  "deploymentId" : "f2a01b0d-eb4f-4960-9168-8ce26279e2d9",
-  "isResourceDeleted" : false,
+  "deploymentId" : "<proton-resource-deleted>",
+  "isResourceDeleted" : true,
   "resourceMetadata" : {
     "arn" : "arn:aws:proton:us-east-1:892963218613:environment/my-env",
     "templateArn" : "arn:aws:proton:us-east-1:892963218613:environment-template/my-lambda-env",
